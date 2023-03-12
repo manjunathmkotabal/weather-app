@@ -1,12 +1,11 @@
-import { Spinner } from 'react-spinners';
+import { Spinner } from 'react-spinners'
 
 const Loader = () => {
   return (
     <div className="sweet-loading relative m-auto">
       <Spinner
-        css={override}
         size={500}
-        color={"#FFF"}
+        color={'#FFF'}
         loading={true}
       />
     </div>
