@@ -1,3 +1,4 @@
+/* eslint-disable react/react-in-jsx-scope */
 import Head from 'next/head'
 import axios from 'axios'
 import { useState } from 'react'
@@ -6,31 +7,28 @@ import Image from 'next/image'
 import Weather from '@/components/Weather'
 import Loader from '@/components/Loader'
 
+export default function Home () {
+  const [city, setCity] = useState('')
+  const [weather, setWeather] = useState({})
+  const [loading, setLoading] = useState(false)
 
-export default function Home() {
+  const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${process.env.NEXT_PUBLIC_WEATHER_KEY}`
 
-    const [city, setCity] = useState('')
-    const [weather, setWeather] = useState({})
-    const [loading, setLoading] = useState(false)
+  const fetchWeather = (e) => {
+    e.preventDefault()
+    setWeather({})
+    setLoading(true)
+    axios.get(url).then((response) => {
+      setWeather(response.data)
+    })
+    setCity('')
+    setLoading(false)
+  }
 
-    const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${process.env.NEXT_PUBLIC_WEATHER_KEY}`
-    
-
-    const fetchWeather = (e) => {
-        e.preventDefault()
-        setWeather({})
-        setLoading(true)
-        axios.get(url).then((response) => {
-            setWeather(response.data)
-        })
-        setCity('')
-        setLoading(false)
-    }
-
-    if(loading) {
-        return <Loader />
-    } else {
-        return (
+  if (loading) {
+    return <Loader />
+  } else {
+    return (
             <div>
                 <Head>
                     <title>Weather Next App</title>
@@ -44,8 +42,8 @@ export default function Home() {
                 </div>
 
                 {/* BG Image */}
-                <Image 
-                    src={'https://images.unsplash.com/photo-1596627008830-41d373a44a96?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1632&q=80' 
+                <Image
+                    src={'https://images.unsplash.com/photo-1596627008830-41d373a44a96?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1632&q=80'
                     }
                     fill
                     className='object-cover'
@@ -53,16 +51,16 @@ export default function Home() {
 
                 {/* Search */}
                 <div className='relative flex justify-between items-center max-w-[350px] w-full m-auto pt-4 text-white z-10'>
-                    <form 
+                    <form
                         onSubmit={fetchWeather}
                         className='flex justify-between items-center w-full m-auto bg-transparent border border-gray-300 text-white rounded-xl'
                     >
                         <div>
-                            <input 
-                                onChange={(e)=>setCity(e.target.value)}
-                                className='bg-transparent  w-[300px] border-none text-white focus:outline-none text-2xl p-3 placeholder:text-white placeholder:opacity-70'  
+                            <input
+                                onChange={(e) => setCity(e.target.value)}
+                                className='bg-transparent  w-[300px] border-none text-white focus:outline-none text-2xl p-3 placeholder:text-white placeholder:opacity-70'
                                 type="text"
-                                placeholder='Search City' 
+                                placeholder='Search City'
                             />
                         </div>
                         <button className='p-4 w-[50px]' onClick={fetchWeather}>
@@ -75,6 +73,6 @@ export default function Home() {
                 {weather.main && <Weather weather={weather} />}
 
             </div>
-        )
-    }
+    )
+  }
 }
